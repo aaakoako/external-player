@@ -3,13 +3,15 @@
 // @name:zh-CN              外部播放器
 // @namespace               https://github.com/LuckyPuppy514/external-player
 // @copyright               2024, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
-// @version                 1.0.1
+// @version                 1.0.2
 // @license                 MIT
 // @description             Play web video via external player
 // @description:zh-CN       使用外部播放器播放网页中的视频
 // @icon                    https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/mpv.png
 // @author                  LuckyPuppy514
 // @homepage                https://github.com/LuckyPuppy514/external-player
+// @downloadURL             https://greasyfork.org/scripts/518677-external-player/code/external-player.user.js
+// @updateURL               https://greasyfork.org/scripts/518677-external-player/code/external-player.user.js
 // @include                 *://*
 // @grant                   GM_setValue
 // @grant                   GM_getValue
@@ -28,7 +30,7 @@ const VIDEO_URL_REGEX_EXACT = /^https?:\/\/((?![^"^']*http)[^"^']+(\.|%2e)(mp4|m
 
 const defaultConfig = {
     global: {
-        version: '1.0.1',
+        version: '1.0.2',
         language: (navigator.language || navigator.userLanguage) === 'zh-CN' ? 'zh' : 'en',
         buttonXCoord: '0',
         buttonYCoord: '0',
@@ -560,7 +562,7 @@ const PARSER = {
             if (bvids && bvids[1]) {
                 param = `bvid=${bvids[1]}`;
             } else {
-                const avids = page.url.match(/av([0-9]+)/);
+                const avids = currentUrl.match(/av([0-9]+)/);
                 param = `aid=${avids[1]}`;
             }
 
@@ -844,6 +846,7 @@ function updateConfig(defaultConfig, config) {
         const dp = defaultConfig.players[index];
         const np = newConfig.players[index];
         if (dp.name === np.name) {
+            np.icon = dp.icon;
             np.readonly = dp.readonly;
             np.playEvent = dp.playEvent;
         } else {
