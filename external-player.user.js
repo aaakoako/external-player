@@ -4,6 +4,7 @@
 // @namespace               https://github.com/LuckyPuppy514/external-player
 // @copyright               2024, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @version                 1.0.1
+// @license                 MIT
 // @description             Play web video via external player
 // @description:zh-CN       使用外部播放器播放网页中的视频
 // @icon                    https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/mpv.png
