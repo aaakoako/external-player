@@ -3,7 +3,7 @@
 // @name:zh-CN              外部播放器
 // @namespace               https://github.com/LuckyPuppy514/external-player
 // @copyright               2024, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
-// @version                 1.0.2
+// @version                 1.0.3
 // @license                 MIT
 // @description             Play web video via external player
 // @description:zh-CN       使用外部播放器播放网页中的视频
@@ -30,7 +30,7 @@ const VIDEO_URL_REGEX_EXACT = /^https?:\/\/((?![^"^']*http)[^"^']+(\.|%2e)(mp4|m
 
 const defaultConfig = {
     global: {
-        version: '1.0.2',
+        version: '1.0.3',
         language: (navigator.language || navigator.userLanguage) === 'zh-CN' ? 'zh' : 'en',
         buttonXCoord: '0',
         buttonYCoord: '0',
@@ -873,10 +873,18 @@ function matchParser(parser, url) {
 
 // =================================== 按钮区域和设置页面 ===================================
 
-const policy = window.trustedTypes.createPolicy('externalPlayer', {
-    createHTML: (string, sink) => string,
-    createScript: (input) => input
-})
+var policy;
+try {
+    policy = window.trustedTypes.createPolicy('externalPlayer', {
+        createHTML: (string, sink) => string,
+        createScript: (input) => input
+    })
+} catch (error) {
+    policy = {
+        createHTML: (string, sink) => string,
+        createScript: (input) => input
+    }
+}
 
 const ID_PREFIX = 'LCKP-EP-2024';
 const FIRST_Z_INDEX = 999999999;
@@ -1920,9 +1928,18 @@ async function appendSettingIframe() {
             mac: '<svg t="1731999754869" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7764" width="32" height="32"><path d="M849.124134 704.896288c-1.040702 3.157923-17.300015 59.872622-57.250912 118.190843-34.577516 50.305733-70.331835 101.018741-126.801964 101.909018-55.532781 0.976234-73.303516-33.134655-136.707568-33.134655-63.323211 0-83.23061 32.244378-135.712915 34.110889-54.254671 2.220574-96.003518-54.951543-130.712017-105.011682-70.934562-102.549607-125.552507-290.600541-52.30118-416.625816 36.040844-63.055105 100.821243-103.135962 171.364903-104.230899 53.160757-1.004887 103.739712 36.012192 136.028093 36.012192 33.171494 0 94.357018-44.791136 158.90615-38.089503 27.02654 1.151219 102.622262 11.298324 151.328567 81.891102-3.832282 2.607384-90.452081 53.724599-89.487104 157.76107C739.079832 663.275355 847.952448 704.467523 849.124134 704.896288M633.69669 230.749408c29.107945-35.506678 48.235584-84.314291 43.202964-132.785236-41.560558 1.630127-92.196819 27.600615-122.291231 62.896492-26.609031 30.794353-50.062186 80.362282-43.521213 128.270409C557.264926 291.935955 604.745311 264.949324 633.69669 230.749408" p-id="7765"></path></svg>'
         };
 
-        const policy = window.trustedTypes.createPolicy('default', {
-            createHTML: (string, sink) => string
-        })
+        var policy;
+        try {
+            policy = window.trustedTypes.createPolicy('default', {
+                createHTML: (string, sink) => string,
+                createScript: (input) => input
+            })
+        } catch (error) {
+            policy = {
+                createHTML: (string, sink) => string,
+                createScript: (input) => input
+            }
+        }
 
         var defaultConfig;
         var tabCount = 0;
@@ -2007,8 +2024,8 @@ async function appendSettingIframe() {
 
             const nameInput = tab.querySelector('[name="name"]');
             nameInput.oninput = () => {
-                tabButton.innerHTML = SYSTEM_SVG[tab.querySelector('[name=system] .active').getAttribute('value')] + (
-                    nameInput.value || tabName);
+                tabButton.innerHTML = policy.createHTML(SYSTEM_SVG[tab.querySelector('[name=system] .active').getAttribute('value')] + (
+                    nameInput.value || tabName));
             };
 
             config.system = config.system || 'windows';
@@ -2018,13 +2035,13 @@ async function appendSettingIframe() {
                     radioButton.onclick = () => {
                         radioButtons.forEach(btn => btn.classList.remove('active'));
                         radioButton.classList.add('active');
-                        tabButton.innerHTML = SYSTEM_SVG[radioButton.getAttribute('value')] + (nameInput
-                            .value || tabName);
+                        tabButton.innerHTML = policy.createHTML(SYSTEM_SVG[radioButton.getAttribute('value')] + (nameInput
+                            .value || tabName));
                     };
                     if (radioButton.getAttribute('value') === config.system) {
                         radioButton.classList.add('active');
-                        tabButton.innerHTML = SYSTEM_SVG[radioButton.getAttribute('value')] + (nameInput
-                            .value || tabName);
+                        tabButton.innerHTML = policy.createHTML(SYSTEM_SVG[radioButton.getAttribute('value')] + (nameInput
+                            .value || tabName));
                     } else {
                         radioButton.classList.remove('active');
                     }
