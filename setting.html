@@ -277,19 +277,24 @@
 
         .radio-button,
         .checkbox-group .chekbox-label {
-            padding: 8px 23.5px;
+            padding: 8px 12px;
             background-color: #e0e0e0;
             cursor: pointer;
             border-radius: 5px;
             font-size: 14px;
             font-weight: normal;
-            min-width: 100px;
+            min-width: 132px;
             display: inline-flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             height: 20px;
             margin: 0;
+        }
+
+        .parser .radio-button,
+        .parser .checkbox-group .chekbox-label {
+            min-width: 122.5px;
         }
 
         .radio-button.active,
@@ -370,8 +375,8 @@
         }
 
         ::-webkit-scrollbar {
-            width: 19px !important;
-            height: 19px !important;
+            width: 20px !important;
+            height: 20px !important;
         }
 
         ::-webkit-scrollbar-thumb {
@@ -628,7 +633,12 @@
             backupLine2: 'Backup 2',
             backupLine3: 'Backup 3',
             unlimited: 'Unlimited',
-            off: 'OFF'
+            off: 'OFF',
+            presetEvent: 'Preset Event',
+            playAuto: 'Play Automatically',
+            pauseAuto: 'Pause Automatically',
+            closeAuto: 'Close Automatically',
+            syncTime: 'Synchronize Time',
         },
         zh: {
             global: '全局配置',
@@ -661,6 +671,11 @@
             backupLine3: '备线3',
             unlimited: '无限制',
             off: '关闭',
+            presetEvent: '预设事件',
+            playAuto: '自动播放',
+            pauseAuto: '自动暂停',
+            closeAuto: '自动关闭',
+            syncTime: '同步时间',
         }
     };
 
@@ -685,6 +700,7 @@
 
     var defaultConfig;
     var tabCount = 0;
+    var projectName;
 
     function translatePage(language) {
         const trans = translations[language];
@@ -707,7 +723,8 @@
         tab.setAttribute('readonly', config.readonly === true)
         const disabled = config.readonly === true ? 'disabled' : '';
         config.presetEvent = config.presetEvent || {
-            pauseAuto: true
+            pauseAuto: true,
+            syncTime: true,
         };
         tab.innerHTML = policy.createHTML(`
             <div class="header">
@@ -742,6 +759,8 @@
                     <label for="${tabId}-pause-auto" data-translate="pauseAuto" class="chekbox-label">自动暂停</label>
                     <input type="checkbox" id="${tabId}-close-auto" name="closeAuto"  ${config.presetEvent.closeAuto ? 'checked' : ''}/>
                     <label for="${tabId}-close-auto" data-translate="closeAuto" class="chekbox-label">自动关闭</label>
+                    <input type="checkbox" id="${tabId}-sync-time" name="syncTime"  ${config.presetEvent.syncTime ? 'checked' : ''}/>
+                    <label for="${tabId}-sync-time" data-translate="syncTime" class="chekbox-label">同步时间</label>
                 </div>
             </div>
             <div class="input-group">
@@ -851,17 +870,18 @@
                         playAuto: tab.querySelector('[name="playAuto"]').checked,
                         pauseAuto: tab.querySelector('[name="pauseAuto"]').checked,
                         closeAuto: tab.querySelector('[name="closeAuto"]').checked,
+                        syncTime: tab.querySelector('[name="syncTime"]').checked,
                     },
                     enable: tab.querySelector('[name="enable"]').checked,
                 });
             }
         });
 
-        if (window.self === window.top) {
-            localStorage.setItem('config', JSON.stringify(config));
-        } else {
-            parent.postMessage(config, '*');
-        }
+        parent.postMessage({
+            name: projectName,
+            method: 'saveConfig',
+            config: config
+        }, '*');
     };
 
     function resetButtonCoord() {
@@ -948,12 +968,16 @@
         }
 
         window.addEventListener('message', function (event) {
-            if (event.data.defaultConfig && event.data.config) {
-                defaultConfig = event.data.defaultConfig;
-                loadConfig(event.data.config);
-                document.getElementById('sidebar-container').style.display = 'flex';
-                document.getElementById('content-container').style.display = 'flex';
+            const data = event.data;
+            if (!data || !data.name || data.method !== 'loadConfig') {
+                return;
             }
+            projectName = data.name;
+            defaultConfig = data.defaultConfig;
+            loadConfig(data.config);
+            translatePage(data.config.global.language);
+            document.getElementById('sidebar-container').style.display = 'flex';
+            document.getElementById('content-container').style.display = 'flex';
         });
 
         document.getElementById('language').addEventListener('change', (e) => {
