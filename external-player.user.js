@@ -3,7 +3,7 @@
 // @name:zh-CN              外部播放器
 // @namespace               https://github.com/LuckyPuppy514/external-player
 // @copyright               2024, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
-// @version                 1.0.4
+// @version                 1.0.5
 // @license                 MIT
 // @description             Play web video via external player
 // @description:zh-CN       使用外部播放器播放网页中的视频
@@ -33,7 +33,7 @@ const VIDEO_URL_REGEX_EXACT = /^https?:\/\/((?![^"^']*http)[^"^']+(\.|%2e)(mp4|m
 
 const defaultConfig = {
     global: {
-        version: '1.0.4',
+        version: '1.0.5',
         language: (navigator.language || navigator.userLanguage) === 'zh-CN' ? 'zh' : 'en',
         buttonXCoord: '0',
         buttonYCoord: '0',
@@ -244,12 +244,8 @@ class BaseParser {
     async pause() {
         for (let index = 0; index < MAX_TRY_COUNT; index++) {
             try {
-                const videos = document.getElementsByTagName('video');
-                if (videos && videos.length > 0) {
-                    for (const video of videos) {
-                        video.pause();
-                    }
-                    break;
+                for (const video of document.getElementsByTagName('video')) {
+                    video.pause();
                 }
             } catch (error) {
                 console.error('暂停失败', error);
@@ -2465,7 +2461,9 @@ onload = () => {
         const url = location.href;
         if (currentUrl !== url || (self === top && !buttonDiv)) {
             console.log(`current url update: ${currentUrl ? currentUrl + ' => ' : ''}${url}`);
-            isReloading = currentUrl && currentUrl.indexOf('?') > -1 && url.startsWith(currentUrl);
+            if (currentUrl) {
+                isReloading = url.split('?')[0].replace(/\/$/, '') === currentUrl.split('?')[0].replace(/\/$/, '');
+            }
             init(url);
         }
     }, REFRESH_INTERVAL);
