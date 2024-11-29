@@ -3,7 +3,7 @@
 // @name:zh-CN              外部播放器
 // @namespace               https://github.com/LuckyPuppy514/external-player
 // @copyright               2024, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
-// @version                 1.0.5
+// @version                 1.0.6
 // @license                 MIT
 // @description             Play web video via external player
 // @description:zh-CN       使用外部播放器播放网页中的视频
@@ -33,7 +33,7 @@ const VIDEO_URL_REGEX_EXACT = /^https?:\/\/((?![^"^']*http)[^"^']+(\.|%2e)(mp4|m
 
 const defaultConfig = {
     global: {
-        version: '1.0.5',
+        version: '1.0.6',
         language: (navigator.language || navigator.userLanguage) === 'zh-CN' ? 'zh' : 'en',
         buttonXCoord: '0',
         buttonYCoord: '0',
@@ -50,7 +50,7 @@ const defaultConfig = {
             },
             video: {
                 regex: [
-                    "https://www.libvio.fun/play/.+",
+                    "https://www.libvio.fun/vid/plyr/vr2.php\\?url=.+",
                     "https://www.tucao.my/play/.+",
                     "https://danmu.yhdmjx.com/m3u8.php\\?url=.+",
                     "https://ddys.pro/.+",
@@ -65,7 +65,9 @@ const defaultConfig = {
                 regex: []
             },
             script: {
-                regex: []
+                regex: [
+                    "https://www.libvio.fun/vid/yd.php\\?url=.+"
+                ]
             },
             request: {
                 regex: []
