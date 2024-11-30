@@ -3,7 +3,7 @@
 // @name:zh-CN              外部播放器
 // @namespace               https://github.com/LuckyPuppy514/external-player
 // @copyright               2024, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
-// @version                 1.0.6
+// @version                 1.0.7
 // @license                 MIT
 // @description             Play web video via external player
 // @description:zh-CN       使用外部播放器播放网页中的视频
@@ -33,7 +33,7 @@ const VIDEO_URL_REGEX_EXACT = /^https?:\/\/((?![^"^']*http)[^"^']+(\.|%2e)(mp4|m
 
 const defaultConfig = {
     global: {
-        version: '1.0.6',
+        version: '1.0.7',
         language: (navigator.language || navigator.userLanguage) === 'zh-CN' ? 'zh' : 'en',
         buttonXCoord: '0',
         buttonYCoord: '0',
@@ -43,6 +43,7 @@ const defaultConfig = {
         parser: {
             ytdlp: {
                 regex: [
+                    "https://www.youtube.com/shorts/.+",
                     "https://www.youtube.com/watch\\?.+",
                     "https://www.youtube.com/playlist\\?list=.+",
                 ],
@@ -50,9 +51,11 @@ const defaultConfig = {
             },
             video: {
                 regex: [
+                    "https://www.moepoi.net/static/player/artplayer.html",
                     "https://www.libvio.fun/vid/plyr/vr2.php\\?url=.+",
-                    "https://www.tucao.my/play/.+",
                     "https://danmu.yhdmjx.com/m3u8.php\\?url=.+",
+                    "https://player.cycanime.com/\\?url=.+",
+                    "https://www.tucao.my/play/.+",
                     "https://ddys.pro/.+",
                 ]
             },
@@ -91,6 +94,11 @@ const defaultConfig = {
                 ],
                 preferredQuality: '4',
                 preferredLine: '0',
+            },
+            aniGamer: {
+                regex: [
+                    "https://ani.gamer.com.tw/animeVideo.php\\?sn=.+"
+                ]
             }
         }
     },
@@ -446,7 +454,6 @@ const PARSER = {
 
             window.fetch = function (url, options) {
                 return originalFetch(url, options).then(response => {
-                    alert(url);
                     if (!that.video) {
                         let urls = url.match(VIDEO_URL_REGEX_GLOBAL) || [];
                         for (const vurl of urls) {
@@ -773,6 +780,28 @@ const PARSER = {
                 }
             }
             currentMedia.video = durl.url;
+        }
+    },
+    ANI_GAMER: class Parser extends BaseParser {
+        async execute() {
+            await this.parseVideo();
+            await this.parseOrigin();
+            await this.parseTitle();
+            await this.parseTime();
+        }
+        async parseVideo() {
+            let match = currentUrl.match(/[?&]sn=([^&]+)/);
+            const sn = match ? match[1] : undefined;
+            if (!sn) {
+                return;
+            }
+            const device = localStorage.ANIME_deviceid;
+            const url = `https://ani.gamer.com.tw/ajax/m3u8.php?sn=${sn}&device=${device}`;
+            const response = await (await fetch(url, {
+                method: 'GET',
+                credentials: 'include'
+            })).json();
+            currentMedia.video = response ? response.src : undefined;
         }
     },
     IFRAME: class Parser extends BaseParser {
