@@ -3,7 +3,7 @@
 // @name:zh-CN              外部播放器
 // @namespace               https://github.com/LuckyPuppy514/external-player
 // @copyright               2024, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
-// @version                 1.0.8
+// @version                 1.0.9
 // @license                 MIT
 // @description             Play web video via external player
 // @description:zh-CN       使用外部播放器播放网页中的视频
@@ -33,7 +33,7 @@ const VIDEO_URL_REGEX_EXACT = /^https?:\/\/((?![^"^']*http)[^"^']+(\.|%2e)(mp4|m
 
 const defaultConfig = {
     global: {
-        version: '1.0.8',
+        version: '1.0.9',
         language: (navigator.language || navigator.userLanguage) === 'zh-CN' ? 'zh' : 'en',
         buttonXCoord: '0',
         buttonYCoord: '0',
@@ -572,14 +572,10 @@ const PARSER = {
             let title = response.data.title;
 
             // 分 p 视频
-            let index = currentUrl.indexOf("?p=");
-            if (index > -1 && response.data.pages.length > 1) {
-                let p = currentUrl.substring(index + 3);
-                let endIndex = p.indexOf("&");
-                if (endIndex > -1) {
-                    p = p.substring(0, endIndex);
-                }
-                const currentPage = res.data.pages[p - 1];
+            const ps = currentUrl.match(/[?&]p=([^&]+)/);
+            if (ps && response.data.pages.length > 1) {
+                const p = ps[1];
+                const currentPage = response.data.pages[p - 1];
                 cid = currentPage.cid;
                 title = currentPage.part;
             }
@@ -1147,6 +1143,7 @@ function hideLoading() {
 function appendButtonDiv() {
     const BUTTON_DIV_ID = `${PROJECT_NAME}-button-div`;
     if (document.getElementById(BUTTON_DIV_ID)) {
+        buttonDiv.style.display = "none";
         return;
     }
     buttonDiv = document.createElement('div');
@@ -2369,7 +2366,9 @@ function showButtonDiv() {
     if (!isReloading) {
         for (const player of currentConfig.players) {
             if (player.presetEvent.playAuto === true) {
-                currentParser.play(player);
+                setTimeout(() => {
+                    currentParser.play(player);
+                }, REFRESH_INTERVAL);
             }
         }
     }
@@ -2495,8 +2494,10 @@ onload = () => {
         const url = location.href;
         if (currentUrl !== url || (self === top && !buttonDiv)) {
             console.log(`current url update: ${currentUrl ? currentUrl + ' => ' : ''}${url}`);
-            if (currentUrl) {
-                isReloading = url.split('?')[0].replace(/\/$/, '') === currentUrl.split('?')[0].replace(/\/$/, '');
+            if (currentUrl && currentUrl.indexOf('?') > -1 &&
+                url.replace(/\/\?/, '?').startsWith(currentUrl.replace(/\/\?/, '?'))) {
+                currentUrl = url;
+                return;
             }
             init(url);
         }
