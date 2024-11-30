@@ -838,6 +838,9 @@
 
         for (const id in defaultConfig.global.parser) {
             const parser = document.getElementById(id);
+            if (!parser) {
+                continue;
+            }
             const regex = parser.querySelector('[name="regex"]:not([disabled])').value;
             config.global.parser[id] = {};
             config.global.parser[id].regex = regex ? regex.split('\n') : [];

@@ -3,7 +3,7 @@
 // @name:zh-CN              外部播放器
 // @namespace               https://github.com/LuckyPuppy514/external-player
 // @copyright               2024, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
-// @version                 1.0.7
+// @version                 1.0.8
 // @license                 MIT
 // @description             Play web video via external player
 // @description:zh-CN       使用外部播放器播放网页中的视频
@@ -33,7 +33,7 @@ const VIDEO_URL_REGEX_EXACT = /^https?:\/\/((?![^"^']*http)[^"^']+(\.|%2e)(mp4|m
 
 const defaultConfig = {
     global: {
-        version: '1.0.7',
+        version: '1.0.8',
         language: (navigator.language || navigator.userLanguage) === 'zh-CN' ? 'zh' : 'en',
         buttonXCoord: '0',
         buttonYCoord: '0',
@@ -2136,6 +2136,9 @@ async function appendSettingIframe() {
 
             for (const id in defaultConfig.global.parser) {
                 const parser = document.getElementById(id);
+                if (!parser) {
+                    continue;
+                }
                 const regex = parser.querySelector('[name="regex"]:not([disabled])').value;
                 config.global.parser[id] = {};
                 config.global.parser[id].regex = regex ? regex.split('\\n') : [];
