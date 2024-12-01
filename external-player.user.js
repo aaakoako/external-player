@@ -3,7 +3,7 @@
 // @name:zh-CN              外部播放器
 // @namespace               https://github.com/LuckyPuppy514/external-player
 // @copyright               2024, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
-// @version                 1.1.0
+// @version                 1.1.1
 // @license                 MIT
 // @description             Play web video via external player
 // @description:zh-CN       使用外部播放器播放网页中的视频
@@ -33,7 +33,7 @@ const VIDEO_URL_REGEX_EXACT = /^https?:\/\/((?![^"^']*http)[^"^']+(\.|%2e)(mp4|m
 
 const defaultConfig = {
     global: {
-        version: '1.1.0',
+        version: '1.1.1',
         language: (navigator.language || navigator.userLanguage) === 'zh-CN' ? 'zh' : 'en',
         buttonXCoord: '0',
         buttonYCoord: '0',
@@ -886,7 +886,7 @@ function updateConfig(defaultConfig, config) {
     for (let index = 0; index < defaultConfig.players.length; index++) {
         const dp = defaultConfig.players[index];
         const np = newConfig.players[index];
-        if (dp.name === np.name) {
+        if (np && dp.name === np.name) {
             np.icon = dp.icon;
             np.readonly = dp.readonly;
             np.playEvent = dp.playEvent;
