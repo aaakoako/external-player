@@ -3,7 +3,7 @@
 // @name:zh-CN              外部播放器
 // @namespace               https://github.com/LuckyPuppy514/external-player
 // @copyright               2024, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
-// @version                 1.1.1
+// @version                 1.1.2
 // @license                 MIT
 // @description             Play web video via external player
 // @description:zh-CN       使用外部播放器播放网页中的视频
@@ -33,7 +33,7 @@ const VIDEO_URL_REGEX_EXACT = /^https?:\/\/((?![^"^']*http)[^"^']+(\.|%2e)(mp4|m
 
 const defaultConfig = {
     global: {
-        version: '1.1.1',
+        version: '1.1.2',
         language: (navigator.language || navigator.userLanguage) === 'zh-CN' ? 'zh' : 'en',
         buttonXCoord: '0',
         buttonYCoord: '0',
@@ -89,8 +89,8 @@ const defaultConfig = {
             bilibiliLive: {
                 regex: [
                     "https://live.bilibili.com/\\d+.*",
-                    "https://live.bilibili.com/blanc/\\d+.*",
-                    "https://live.bilibili.com/blackboard/era/.+",
+                    "https://live.bilibili.com/roomid=\\d+.*",
+                    "https://live.bilibili.com/blanc/\\d+.*"
                 ],
                 preferredQuality: '4',
                 preferredLine: '0',
@@ -758,17 +758,10 @@ const PARSER = {
             await this.parseReferer();
         }
         async parseVideo() {
-            let iframes = document.getElementsByTagName("iframe");
-            let roomid = undefined;
-            for (let iframe of iframes) {
-                let roomids = iframe.src.match(
-                    /^https:\/\/live\.bilibili\.com.*(roomid=\d+|blanc\/\d+).*/
-                );
-                if (roomids && roomids[1]) {
-                    roomid = roomids[1].match(/\d+/)[0];
-                    break;
-                }
-            }
+            const roomids = currentUrl.match(
+                /.*(roomid=|blanc\/|live.bilibili.com\/)(\d+).*/
+            );
+            const roomid = roomids ? roomids[2] : undefined;
 
             if (!roomid) {
                 throw new Error('can not find roomid');
@@ -2400,29 +2393,30 @@ function initTop() {
 
     if (currentParser) {
         showButtonDiv();
-    } else {
-        // 没有解析器则监听子页面事件
-        window.addEventListener('message', function (event) {
-            const data = event.data;
-            if (!data) {
-                return;
-            }
-            if (!data.name || data.name !== PROJECT_NAME) {
-                return;
-            }
-            if (data.method === 'init') {
-                iframe = event.source;
-                currentParser = new PARSER.IFRAME();
-                isReloading = data.isReloading;
-                showButtonDiv();
-                return;
-            }
-            if (data.method === 'currentMedia') {
-                currentMedia = data.currentMedia;
-                return;
-            }
-        });
     }
+
+    // 监听子页面事件
+    window.addEventListener('message', function (event) {
+        const data = event.data;
+        if (!data) {
+            return;
+        }
+        if (!data.name || data.name !== PROJECT_NAME) {
+            return;
+        }
+        if (data.method === 'init') {
+            iframe = event.source;
+            // 子页面覆盖父页面解析器
+            currentParser = new PARSER.IFRAME();
+            isReloading = data.isReloading;
+            showButtonDiv();
+            return;
+        }
+        if (data.method === 'currentMedia') {
+            currentMedia = data.currentMedia;
+            return;
+        }
+    });
 
     // 快捷键
     document.addEventListener('keydown', (event) => {
