@@ -3,7 +3,7 @@
 // @name:zh-CN              外部播放器
 // @namespace               https://github.com/LuckyPuppy514/external-player
 // @copyright               2024, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
-// @version                 1.1.3
+// @version                 1.1.4
 // @license                 MIT
 // @description             Play web video via external player
 // @description:zh-CN       使用外部播放器播放网页中的视频
@@ -33,7 +33,7 @@ const VIDEO_URL_REGEX_EXACT = /^https?:\/\/((?![^"^']*http)[^"^']+(\.|%2e)(mp4|m
 
 const defaultConfig = {
     global: {
-        version: '1.1.3',
+        version: '1.1.4',
         language: (navigator.language || navigator.userLanguage) === 'zh-CN' ? 'zh' : 'en',
         buttonXCoord: '0',
         buttonYCoord: '0',
@@ -52,7 +52,7 @@ const defaultConfig = {
             video: {
                 regex: [
                     "https://www.moepoi.net/static/player/artplayer.html",
-                    "https://www.libvio.fun/vid/plyr/vr2.php\\?url=.+",
+                    "https://.*libvio\\..+/vid/plyr/vr2.php\\?url=.+",
                     "https://danmu.yhdmjx.com/m3u8.php\\?url=.+",
                     "https://player.cycanime.com/\\?url=.+",
                     "https://www.tucao.my/play/.+",
@@ -62,6 +62,7 @@ const defaultConfig = {
             url: {
                 regex: [
                     "https://m3u8.girigirilove.com/addons/dp/player/dp.php\\?.+",
+                    "https://m3u8.girigirilove.icu/addons/dp/player/dp.php\\?.+",
                 ]
             },
             html: {
@@ -69,7 +70,7 @@ const defaultConfig = {
             },
             script: {
                 regex: [
-                    "https://www.libvio.fun/vid/yd.php\\?url=.+"
+                    "https://.*libvio\\..+/vid/yd.php\\?url=.+"
                 ]
             },
             request: {

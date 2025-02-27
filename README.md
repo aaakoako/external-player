@@ -2,7 +2,7 @@
 
 使用外部播放器播放网页中的视频
 
-## 安装
+## 🧱 安装
 
 ### 1. 安装油猴插件
 
@@ -15,6 +15,20 @@
 ### 3. 安装 URL Scheme Handler
 
 - [URL Scheme Handler](https://github.com/LuckyPuppy514/url-scheme-handler)
+
+## 👀 支持的网站
+
+- [yt-dlp 支持的网站](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md)
+- [B站](https://www.bilibili.com)
+- [B站直播](https://live.bilibili.com)
+- [樱花动漫](https://916dm.fans)
+- [Girigiri爱动漫](https://anime.girigirilove.com) / [Girigiri爱动漫](https://anime.girigirilove.icu)
+- [LIBVIO](https://www.libvio.app)
+- [吐槽弹幕网](https://www.tucao.my)
+- [萌番动漫馆](https://www.moepoi.net)
+- [巴哈姆特](https://ani.gamer.com.tw)
+
+> 更多网站请自行探索，可以把网站正则添加到全局配置解析器中进行尝试
 
 ## 👏 相关仓库
 
