@@ -724,7 +724,7 @@
         const disabled = config.readonly === true ? 'disabled' : '';
         config.presetEvent = config.presetEvent || {
             pauseAuto: true,
-            syncTime: true,
+            syncTime: false,
         };
         tab.innerHTML = policy.createHTML(`
             <div class="header">

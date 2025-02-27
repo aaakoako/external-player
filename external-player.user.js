@@ -3,7 +3,7 @@
 // @name:zh-CN              外部播放器
 // @namespace               https://github.com/LuckyPuppy514/external-player
 // @copyright               2024, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
-// @version                 1.1.2
+// @version                 1.1.3
 // @license                 MIT
 // @description             Play web video via external player
 // @description:zh-CN       使用外部播放器播放网页中的视频
@@ -33,7 +33,7 @@ const VIDEO_URL_REGEX_EXACT = /^https?:\/\/((?![^"^']*http)[^"^']+(\.|%2e)(mp4|m
 
 const defaultConfig = {
     global: {
-        version: '1.1.2',
+        version: '1.1.3',
         language: (navigator.language || navigator.userLanguage) === 'zh-CN' ? 'zh' : 'en',
         buttonXCoord: '0',
         buttonYCoord: '0',
@@ -112,7 +112,7 @@ const defaultConfig = {
                 playAuto: false,
                 pauseAuto: true,
                 closeAuto: false,
-                syncTime: true,
+                syncTime: false,
             },
             enable: true,
             readonly: true,
@@ -127,7 +127,7 @@ const defaultConfig = {
                 playAuto: false,
                 pauseAuto: true,
                 closeAuto: false,
-                syncTime: true,
+                syncTime: false,
             },
             enable: true,
             readonly: true,
@@ -142,7 +142,7 @@ const defaultConfig = {
                 playAuto: false,
                 pauseAuto: true,
                 closeAuto: false,
-                syncTime: true,
+                syncTime: false,
             },
             enable: true,
             readonly: true,
@@ -157,7 +157,7 @@ const defaultConfig = {
                 playAuto: false,
                 pauseAuto: true,
                 closeAuto: false,
-                syncTime: true,
+                syncTime: false,
             },
             enable: true,
             readonly: true,
@@ -2027,7 +2027,7 @@ async function appendSettingIframe() {
             const disabled = config.readonly === true ? 'disabled' : '';
             config.presetEvent = config.presetEvent || {
                 pauseAuto: true,
-                syncTime: true,
+                syncTime: false,
             };
             tab.innerHTML = policy.createHTML(\`
                 <div class="header">
