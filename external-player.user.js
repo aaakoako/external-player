@@ -3,7 +3,7 @@
 // @name:zh-CN              外部播放器
 // @namespace               https://github.com/LuckyPuppy514/external-player
 // @copyright               2024, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
-// @version                 1.1.4
+// @version                 1.1.5
 // @license                 MIT
 // @description             Play web video via external player
 // @description:zh-CN       使用外部播放器播放网页中的视频
@@ -33,7 +33,7 @@ const VIDEO_URL_REGEX_EXACT = /^https?:\/\/((?![^"^']*http)[^"^']+(\.|%2e)(mp4|m
 
 const defaultConfig = {
     global: {
-        version: '1.1.4',
+        version: '1.1.5',
         language: (navigator.language || navigator.userLanguage) === 'zh-CN' ? 'zh' : 'en',
         buttonXCoord: '0',
         buttonYCoord: '0',
@@ -368,7 +368,6 @@ const PARSER = {
         async execute() {
             await this.parseVideo();
             await this.parseTitle();
-            await this.parseReferer();
             await this.parseTime();
         }
         async parseVideo() {
@@ -384,7 +383,6 @@ const PARSER = {
         async execute() {
             await this.parseVideo();
             await this.parseTitle();
-            await this.parseReferer();
             await this.parseTime();
         }
         async parseVideo() {
@@ -411,7 +409,6 @@ const PARSER = {
         async execute() {
             await this.parseVideo();
             await this.parseTitle();
-            await this.parseReferer();
             await this.parseTime();
         }
         async parseVideo() {
@@ -428,7 +425,6 @@ const PARSER = {
         async execute() {
             await this.parseVideo();
             await this.parseTitle();
-            await this.parseReferer();
             await this.parseTime();
         }
         async parseVideo() {
