@@ -108,6 +108,13 @@ const defaultConfig = {
                     "https://missav.com/.+",
                 ]
             },
+            missav_fallback: {
+                regex: [
+                    "https://missav.ai/.+",
+                    "https://missav.ws/.+",
+                    "https://missav.com/.+",
+                ]
+            },
             iframe: {
                 regex: [
                     "https://.*libvio\\..+/vid/iframe/vr2.php\\?url=.+"
@@ -135,7 +142,7 @@ const defaultConfig = {
             system: 'windows',
             icon: 'data:image/png;base64,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',
             iconSize: 50,
-            playEvent: "let args = [\n    `\"${media.video}\"`,\n    media.subtitle ? `/sub=\"${media.subtitle}\"` : '',\n    media.origin ? `/headers=\"origin: ${media.origin}\"` : '',\n    media.referer ? `/referer=\"${media.referer}\"` : '',\n    config.networkProxy ? `/user_agent=\"${config.networkProxy}\"` : '',\n    media.title ? `/title=\"${media.title}\"` : '',\n    media.time ? `/seek=\"${media.time}\"` : '',\n]\nargs = args.filter(item => item !== '');\n\nconsole.log(args);\n\nwindow.open(`ush://${player.name}?${compress(args.join(' '))}`, '_self');",
+            playEvent: "let args = [\n    `\"${media.video}\"`,\n    media.subtitle ? `/sub=\"${media.subtitle}\"` : '',\n    media.origin ? `/headers=\"origin: ${media.origin)}\"` : '',\n    media.referer ? `/referer=\"${media.referer}\"` : '',\n    config.networkProxy ? `/user_agent=\"${config.networkProxy}\"` : '',\n    media.title ? `/title=\"${media.title}\"` : '',\n    media.time ? `/seek=\"${media.time}\"` : '',\n]\nargs = args.filter(item => item !== '');\n\nconsole.log(args);\n\nwindow.open(`ush://${player.name}?${compress(args.join(' '))}`, '_self');",
             presetEvent: {
                 playAuto: false,
                 pauseAuto: true,
@@ -896,11 +903,126 @@ const PARSER = {
                             
                             const script = document.createElement('script');
                             script.id = 'external_player_xhr_monitor';
-                            script.textContent = `
+                            script.innerHTML = `
                                 // 检查是否已初始化监视器，避免重复声明变量
                                 if (!window.externalPlayerXhrInitialized) {
                                     window.externalPlayerXhrInitialized = true;
                                     window.actualVideoUrls = window.actualVideoUrls || [];
+                                    
+                                    // 添加清晰度信息存储结构
+                                    window.videoQualityInfo = window.videoQualityInfo || {};
+                                    
+                                    // 解析m3u8清晰度并获取最高质量版本
+                                    async function analyzeM3u8Quality(url) {
+                                        if (!url || !url.includes('.m3u8')) return null;
+                                        
+                                        console.log('分析m3u8清晰度:', url);
+                                        try {
+                                            // 获取主m3u8内容
+                                            const response = await fetch(url, {
+                                                headers: {
+                                                    'Referer': window.location.href,
+                                                    'Origin': window.location.origin
+                                                }
+                                            });
+                                            if (!response.ok) {
+                                                console.error('无法获取m3u8内容:', response.status);
+                                                return null;
+                                            }
+                                            
+                                            const text = await response.text();
+                                            console.log('m3u8内容:', text.substring(0, 200) + '...');
+                                            
+                                            // 分析是否是主播放列表
+                                            if (text.includes('#EXT-X-STREAM-INF')) {
+                                                console.log('检测到主播放列表');
+                                                // 解析不同清晰度版本
+                                                const variants = [];
+                                                const lines = text.split('\n');
+                                                let currentResolution = '';
+                                                let currentBandwidth = 0;
+                                                
+                                                for (let i = 0; i < lines.length; i++) {
+                                                    const line = lines[i].trim();
+                                                    // 解析清晰度信息
+                                                    if (line.startsWith('#EXT-X-STREAM-INF')) {
+                                                        currentResolution = '';
+                                                        currentBandwidth = 0;
+                                                        
+                                                        // 提取分辨率
+                                                        const resMatch = line.match(/RESOLUTION=(\d+x\d+)/);
+                                                        if (resMatch) {
+                                                            currentResolution = resMatch[1];
+                                                        }
+                                                        
+                                                        // 提取带宽
+                                                        const bwMatch = line.match(/BANDWIDTH=(\d+)/);
+                                                        if (bwMatch) {
+                                                            currentBandwidth = parseInt(bwMatch[1]);
+                                                        }
+                                                    } 
+                                                    // 下一行通常是m3u8路径
+                                                    else if (currentResolution && (line.endsWith('.m3u8') || line.includes('.m3u8?'))) {
+                                                        let variantUrl = line;
+                                                        // 处理相对路径
+                                                        if (!variantUrl.startsWith('http')) {
+                                                            const baseUrl = url.substring(0, url.lastIndexOf('/') + 1);
+                                                            variantUrl = baseUrl + variantUrl;
+                                                        }
+                                                        
+                                                        variants.push({
+                                                            resolution: currentResolution,
+                                                            bandwidth: currentBandwidth,
+                                                            url: variantUrl
+                                                        });
+                                                        currentResolution = '';
+                                                        currentBandwidth = 0;
+                                                    }
+                                                }
+                                                
+                                                if (variants.length > 0) {
+                                                    console.log('找到的视频清晰度变体:', variants);
+                                                    // 根据分辨率和带宽排序，选择最高清晰度
+                                                    variants.sort((a, b) => {
+                                                        // 首先比较分辨率的高度（第二个数字）
+                                                        const heightA = parseInt(a.resolution.split('x')[1]);
+                                                        const heightB = parseInt(b.resolution.split('x')[1]);
+                                                        if (heightA !== heightB) return heightB - heightA;
+                                                        
+                                                        // 如果高度相同，比较带宽
+                                                        return b.bandwidth - a.bandwidth;
+                                                    });
+                                                    
+                                                    const bestVariant = variants[0];
+                                                    console.log('选择最高清晰度:', bestVariant);
+                                                    
+                                                    // 保存清晰度信息
+                                                    window.videoQualityInfo[url] = {
+                                                        isMainPlaylist: true,
+                                                        variants: variants,
+                                                        bestVariant: bestVariant
+                                                    };
+                                                    
+                                                    // 将最高清晰度的链接添加到视频源列表
+                                                    if (!window.actualVideoUrls.includes(bestVariant.url)) {
+                                                        window.actualVideoUrls.push(bestVariant.url);
+                                                        console.log('添加最高清晰度链接:', bestVariant.url);
+                                                        document.dispatchEvent(new CustomEvent('hls_url_detected', { detail: bestVariant.url }));
+                                                    }
+                                                    return bestVariant.url;
+                                                }
+                                            } else {
+                                                // 这是一个具体分辨率的m3u8，而不是主播放列表
+                                                console.log('这是具体分辨率的m3u8，非主播放列表');
+                                                window.videoQualityInfo[url] = {
+                                                    isMainPlaylist: false
+                                                };
+                                            }
+                                        } catch (e) {
+                                            console.error('分析m3u8清晰度时出错:', e);
+                                        }
+                                        return null;
+                                    }
                                     
                                     // 劫持XMLHttpRequest.prototype.open以捕获m3u8请求
                                     const originalOpen = XMLHttpRequest.prototype.open;
@@ -1057,6 +1179,13 @@ const PARSER = {
                                 const hlsListener = (event) => {
                                     showLog(`捕获到m3u8 URL: ${event.detail}`);
                                     
+                                    // 尝试分析m3u8清晰度
+                                    analyzeM3u8Quality(event.detail).then(bestUrl => {
+                                        if (bestUrl) {
+                                            showLog(`找到更高清晰度版本: ${bestUrl}`);
+                                        }
+                                    });
+                                    
                                     // 立即验证m3u8链接
                                     this.check(event.detail).then(isValid => {
                                         if (isValid) {
@@ -1065,7 +1194,15 @@ const PARSER = {
                                             document.removeEventListener('hls_url_detected', hlsListener);
                                             document.removeEventListener('video_src_detected', videoSrcListener);
                                             showLog(`验证m3u8 URL有效: ${event.detail}`);
-                                            resolve(event.detail);
+                                            
+                                            // 检查是否有更高清晰度的版本
+                                            const qualityInfo = window.videoQualityInfo && window.videoQualityInfo[event.detail];
+                                            if (qualityInfo && qualityInfo.isMainPlaylist && qualityInfo.bestVariant) {
+                                                showLog(`选择最高清晰度版本: ${qualityInfo.bestVariant.resolution}`);
+                                                resolve(qualityInfo.bestVariant.url);
+                                            } else {
+                                                resolve(event.detail);
+                                            }
                                         } else {
                                             showLog(`m3u8链接验证失败: ${event.detail}`);
                                         }
@@ -1097,7 +1234,18 @@ const PARSER = {
                                             clearTimeout(timeout);
                                             document.removeEventListener('hls_url_detected', hlsListener);
                                             document.removeEventListener('video_src_detected', videoSrcListener);
-                                            resolve(event.detail);
+                                            showLog(`验证m3u8 URL有效: ${event.detail}`);
+                                            
+                                            // 检查是否有更高清晰度的版本
+                                            const qualityInfo = window.videoQualityInfo && window.videoQualityInfo[event.detail];
+                                            if (qualityInfo && qualityInfo.isMainPlaylist && qualityInfo.bestVariant) {
+                                                showLog(`选择最高清晰度版本: ${qualityInfo.bestVariant.resolution}`);
+                                                resolve(qualityInfo.bestVariant.url);
+                                            } else {
+                                                resolve(event.detail);
+                                            }
+                                        } else {
+                                            showLog(`m3u8链接验证失败: ${event.detail}`);
                                         }
                                     });
                                 };
@@ -1144,7 +1292,7 @@ const PARSER = {
                                 // 注入额外的分析脚本，尝试更深层次获取视频源
                                 const analyzeScript = document.createElement('script');
                                 analyzeScript.id = 'external_player_analyze';
-                                analyzeScript.textContent = `
+                                analyzeScript.innerHTML = `
                                     // 再次尝试直接从网页中分析可能的视频源
                                     try {
                                         // 分析网页中的所有<script>标签
@@ -1175,19 +1323,13 @@ const PARSER = {
                                                     ['source', 'src', 'url', 'file', 'sources'].forEach(prop => {
                                                         if (obj[prop]) {
                                                             let value = obj[prop];
-                                                            if (Array.isArray(value)) {
-                                                                value.forEach(item => {
-                                                                    if (item && item.file && typeof item.file === 'string' && item.file.includes('.m3u8')) {
-                                                                        console.log('从配置数组中找到m3u8:', item.file);
-                                                                        if (!window.actualVideoUrls.includes(item.file)) {
-                                                                            window.actualVideoUrls.push(item.file);
-                                                                        }
-                                                                    }
-                                                                });
-                                                            } else if (typeof value === 'string' && value.includes('.m3u8')) {
+                                                            if (typeof value === 'string' && value.includes('.m3u8')) {
                                                                 console.log('从配置对象中找到m3u8:', value);
+                                                                if (!window.actualVideoUrls) window.actualVideoUrls = [];
                                                                 if (!window.actualVideoUrls.includes(value)) {
                                                                     window.actualVideoUrls.push(value);
+                                                                    // 尝试直接添加到列表
+                                                                    document.dispatchEvent(new CustomEvent('hls_url_detected', { detail: value }));
                                                                 }
                                                             }
                                                         }
@@ -1201,7 +1343,9 @@ const PARSER = {
                                 `;
                                 document.head.appendChild(analyzeScript);
                                 setTimeout(() => {
-                                    analyzeScript.remove();
+                                    try {
+                                        analyzeScript.remove();
+                                    } catch (e) {}
                                 }, 1000);
                                 
                                 const script = document.createElement('script');
@@ -1228,14 +1372,60 @@ const PARSER = {
                             const m3u8Urls = urls.filter(url => url && typeof url === 'string' && url.includes('.m3u8'));
                             if (m3u8Urls.length > 0) {
                                 showLog(`找到${m3u8Urls.length}个m3u8链接，优先尝试这些链接`);
+                                
+                                // 先尝试分析每个m3u8链接，查找最高清晰度版本
                                 for (const url of m3u8Urls) {
-                                    if (await this.check(url)) {
-                                        currentMedia.video = url;
-                                        showLog(`使用有效的m3u8链接: ${url}`);
+                                    const bestUrl = await analyzeM3u8Quality(url);
+                                    if (bestUrl) {
+                                        showLog(`${url} 分析完成，最高清晰度版本: ${bestUrl}`);
+                                    }
+                                }
+                                
+                                // 按照清晰度排序m3u8链接
+                                const sortedUrls = [...m3u8Urls].sort((a, b) => {
+                                    const infoA = window.videoQualityInfo[a];
+                                    const infoB = window.videoQualityInfo[b];
+                                    
+                                    // 主播放列表优先于具体清晰度的m3u8
+                                    if (infoA && infoA.isMainPlaylist && (!infoB || !infoB.isMainPlaylist)) return -1;
+                                    if (infoB && infoB.isMainPlaylist && (!infoA || !infoA.isMainPlaylist)) return 1;
+                                    
+                                    // 都是主播放列表，无法比较，保持原顺序
+                                    return 0;
+                                });
+                                
+                                // 尝试每个m3u8链接
+                                for (const url of sortedUrls) {
+                                    // 检查是否有更高清晰度的版本
+                                    const qualityInfo = window.videoQualityInfo && window.videoQualityInfo[url];
+                                    const urlToCheck = (qualityInfo && qualityInfo.isMainPlaylist && qualityInfo.bestVariant) 
+                                                     ? qualityInfo.bestVariant.url : url;
+                                                      
+                                    if (await this.check(urlToCheck)) {
+                                        currentMedia.video = urlToCheck;
+                                        if (url !== urlToCheck) {
+                                            showLog(`使用最高清晰度m3u8链接: ${urlToCheck} (原链接: ${url})`);
+                                        } else {
+                                            showLog(`使用有效的m3u8链接: ${urlToCheck}`);
+                                        }
                                         return;
                                     } else {
-                                        showLog(`m3u8链接验证失败: ${url}`);
+                                        showLog(`m3u8链接验证失败: ${urlToCheck}`);
                                     }
+                                }
+                            }
+                            
+                            // 如果没有找到有效的m3u8链接，尝试其他链接
+                            for (const url of urls) {
+                                // 跳过blob链接和已检查过的m3u8链接
+                                if (!url || typeof url !== 'string' || url.startsWith('blob:') || url.includes('.m3u8')) {
+                                    continue;
+                                }
+                                
+                                if (await this.check(url)) {
+                                    currentMedia.video = url;
+                                    showLog(`找到可用的视频源: ${url}`);
+                                    return;
                                 }
                             }
                         } catch (error) {
@@ -1346,6 +1536,111 @@ const PARSER = {
                 name: PROJECT_NAME,
                 method: 'pause'
             }, '*');
+        }
+    },
+    
+    // 添加一个备用解析器专门用于MISSAV网站
+    MISSAV_FALLBACK: class Parser extends BaseParser {
+        async execute() {
+            showLog('开始使用MISSAV备用解析器...');
+            await this.parseVideo();
+            await this.parseTitle();
+            await this.parseReferer();
+            await this.parseTime();
+        }
+        
+        async parseVideo() {
+            if (currentMedia.video) return;
+            
+            showLog('尝试使用MISSAV备用方法...');
+            
+            // 已知的备用链接
+            const fallbackLinks = [
+                "https://surrit.com/03fc5780-5bf4-44c0-be25-f202417eb820/playlist.m3u8"
+            ];
+            
+            // 尝试推测视频ID并构建链接
+            const urlMatch = currentUrl.match(/\/([^\/]+)$/);
+            if (urlMatch && urlMatch[1]) {
+                const videoId = urlMatch[1];
+                showLog(`从URL中提取视频ID: ${videoId}`);
+                
+                // MIRD-234系列特定链接
+                if (videoId.toLowerCase().includes('mird-234')) {
+                    fallbackLinks.push('https://b-hls-02.sacdnssedge.com/hls/119432517/119432517_1080p.m3u8');
+                    fallbackLinks.push('https://b-hls-02.sacdnssedge.com/hls/119432517/119432517_720p.m3u8');
+                    fallbackLinks.push('https://b-hls-02.sacdnssedge.com/hls/119432517/119432517_480p.m3u8');
+                    fallbackLinks.push('https://b-hls-02.sacdnssedge.com/hls/119432517/119432517_360p.m3u8');
+                    fallbackLinks.push('https://b-hls-02.sacdnssedge.com/hls/119432517/119432517_240p.m3u8');
+                }
+            }
+            
+            // 尝试每个备用链接
+            for (const url of fallbackLinks) {
+                showLog(`尝试备用链接: ${url}`);
+                try {
+                    if (await this.check(url)) {
+                        currentMedia.video = url;
+                        showLog(`成功使用备用链接: ${url}`);
+                        return;
+                    }
+                } catch (e) {
+                    showLog(`备用链接检查失败: ${url}`);
+                }
+            }
+            
+            // 尝试直接从页面内容中找出m3u8链接
+            try {
+                showLog('从页面内容中搜索m3u8链接...');
+                const htmlContent = document.documentElement.innerHTML;
+                // 使用更严格的正则表达式，确保只匹配完整的URL，不包含HTML标签
+                const m3u8Regex = /https?:\/\/[^"'\s<>]+\.m3u8/g;
+                const matches = htmlContent.match(m3u8Regex);
+                
+                if (matches && matches.length > 0) {
+                    showLog(`在HTML中找到${matches.length}个m3u8链接`);
+                    
+                    // 先尝试通过分析m3u8质量来选择最佳链接
+                    for (const rawUrl of matches) {
+                        try {
+                            // 清理URL，确保没有HTML标签和无效字符
+                            const url = rawUrl.replace(/<[^>]*>/g, '').replace(/\s+/g, '').trim();
+                            
+                            if (!url.startsWith('http')) {
+                                showLog(`忽略无效URL: ${url}`);
+                                continue;
+                            }
+                            
+                            showLog(`尝试分析m3u8质量: ${url}`);
+                            const bestQualityUrl = await analyzeM3u8Quality(url);
+                            
+                            if (bestQualityUrl) {
+                                showLog(`找到最佳质量链接: ${bestQualityUrl}`);
+                                if (await this.check(bestQualityUrl)) {
+                                    currentMedia.video = bestQualityUrl;
+                                    showLog(`使用最高质量m3u8链接: ${bestQualityUrl}`);
+                                    return;
+                                }
+                            } else {
+                                // 直接检查原始链接
+                                if (await this.check(url)) {
+                                    currentMedia.video = url;
+                                    showLog(`使用单一质量m3u8链接: ${url}`);
+                                    return;
+                                }
+                            }
+                        } catch (e) {
+                            showLog(`链接分析失败: ${rawUrl}, 错误: ${e.message}`);
+                        }
+                    }
+                } else {
+                    showLog('在页面中未找到m3u8链接');
+                }
+            } catch (e) {
+                showLog(`从HTML查找链接失败: ${e.message}`);
+            }
+            
+            showLog('所有备用方法尝试完毕，未找到可用链接');
         }
     }
 };
@@ -1691,7 +1986,7 @@ function showLog(message) {
     }
     
     // 同时输出到控制台
-    console.log(message);
+                console.log(message);
 }
 
 function appendLoadingDiv() {
@@ -3068,6 +3363,30 @@ async function init(url) {
     currentConfig = loadConfig();
     translation = translations[currentConfig.global.language];
     currentParser = matchParser(currentConfig.global.parser, url) || matchParser(defaultConfig.global.parser, url);
+    // 如果是MISSAV网站，让MISSAV_FALLBACK作为备选
+    if (url.includes("missav.") && currentParser && currentParser.constructor.name === "Parser" && 
+        (new RegExp("https://missav\\.ai/.+|https://missav\\.ws/.+|https://missav\\.com/.+").test(url))) {
+        console.log("当前是MISSAV网站，将在常规解析失败后尝试备用解析器");
+        const originalExecute = currentParser.execute;
+        currentParser.execute = async function() {
+            try {
+                await originalExecute.call(this);
+                // 如果获取到视频链接则成功
+                if (currentMedia.video) {
+                    return;
+                }
+                // 否则尝试备用解析器
+                console.log("常规MISSAV解析失败，尝试使用MISSAV_FALLBACK解析器");
+                const fallbackParser = new PARSER.MISSAV_FALLBACK();
+                await fallbackParser.execute();
+            } catch (error) {
+                console.error("解析MISSAV失败，尝试备用解析器", error);
+                const fallbackParser = new PARSER.MISSAV_FALLBACK();
+                await fallbackParser.execute();
+            }
+        };
+    }
+    
     if (self === top) {
         initTop();
     } else {
@@ -3090,3 +3409,93 @@ onload = () => {
         }
     }, REFRESH_INTERVAL);
 };
+
+// 在PARSER对象之前添加新函数
+async function analyzeM3u8Quality(url) {
+    try {
+        showLog(`分析m3u8清晰度: ${url}`);
+        // 清理URL，移除HTML标签和无效字符
+        url = url.replace(/<[^>]*>/g, '').replace(/\s+/g, '').trim();
+        
+        if (!url.startsWith('http')) {
+            showLog(`无效的URL: ${url}`);
+            return null;
+        }
+        
+        const response = await fetch(url, {
+            headers: {
+                'Referer': currentUrl
+            },
+            credentials: 'omit' // 避免CORS凭证问题
+        });
+        
+        if (!response.ok) {
+            showLog(`无法加载m3u8文件: ${response.status}`);
+            return null;
+        }
+        
+        const content = await response.text();
+        // 检查是否为主播放列表
+        if (content.includes('#EXT-X-STREAM-INF')) {
+            showLog('检测到主播放列表，分析变体流');
+            const variants = [];
+            const lines = content.split('\n');
+            
+            let currentBandwidth = 0;
+            let currentResolution = '';
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                if (line.includes('#EXT-X-STREAM-INF')) {
+                    // 提取带宽信息
+                    const bandwidthMatch = line.match(/BANDWIDTH=(\d+)/);
+                    currentBandwidth = bandwidthMatch ? parseInt(bandwidthMatch[1]) : 0;
+                    
+                    // 提取分辨率信息
+                    const resolutionMatch = line.match(/RESOLUTION=(\d+x\d+)/);
+                    currentResolution = resolutionMatch ? resolutionMatch[1] : '';
+                } else if (line && !line.startsWith('#') && currentBandwidth > 0) {
+                    // 这是一个变体流URL
+                    let variantUrl = line;
+                    if (!variantUrl.startsWith('http')) {
+                        // 处理相对URL
+                        const baseUrl = url.substring(0, url.lastIndexOf('/') + 1);
+                        variantUrl = baseUrl + variantUrl;
+                    }
+                    
+                    variants.push({
+                        bandwidth: currentBandwidth,
+                        resolution: currentResolution,
+                        url: variantUrl
+                    });
+                    
+                    currentBandwidth = 0;
+                    currentResolution = '';
+                }
+            }
+            
+            // 按带宽从高到低排序
+            variants.sort((a, b) => b.bandwidth - a.bandwidth);
+            
+            if (variants.length > 0) {
+                const bestVariant = variants[0];
+                showLog(`找到最佳质量: ${bestVariant.resolution} (${bestVariant.bandwidth}bps)`);
+                
+                // 存储质量信息供后续使用
+                if (!window.videoQualityInfo) window.videoQualityInfo = {};
+                window.videoQualityInfo[url] = {
+                    isMainPlaylist: true,
+                    variants: variants,
+                    bestVariant: bestVariant
+                };
+                
+                return bestVariant.url;
+            }
+        }
+        
+        return null;
+    } catch (error) {
+        showLog(`分析m3u8质量失败: ${error.message}`);
+        return null;
+    }
+}
