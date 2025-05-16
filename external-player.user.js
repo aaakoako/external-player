@@ -369,7 +369,6 @@ const PARSER = {
         async execute() {
             await this.parseVideo();
             await this.parseTitle();
-            await this.parseReferer();
             await this.parseTime();
         }
         async parseVideo() {
@@ -385,7 +384,6 @@ const PARSER = {
         async execute() {
             await this.parseVideo();
             await this.parseTitle();
-            await this.parseReferer();
             await this.parseTime();
         }
         async parseVideo() {
@@ -412,7 +410,6 @@ const PARSER = {
         async execute() {
             await this.parseVideo();
             await this.parseTitle();
-            await this.parseReferer();
             await this.parseTime();
         }
         async parseVideo() {
@@ -429,7 +426,6 @@ const PARSER = {
         async execute() {
             await this.parseVideo();
             await this.parseTitle();
-            await this.parseReferer();
             await this.parseTime();
         }
         async parseVideo() {
