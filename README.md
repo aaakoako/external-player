@@ -27,6 +27,7 @@
 - [吐槽弹幕网](https://www.tucao.my)
 - [萌番动漫馆](https://www.moepoi.net)
 - [巴哈姆特](https://ani.gamer.com.tw)
+- [CN影院](https://cnys.tv)
 
 > 更多网站请自行探索，可以把网站正则添加到全局配置解析器中进行尝试
 
