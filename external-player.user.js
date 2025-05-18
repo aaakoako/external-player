@@ -3,7 +3,7 @@
 // @name:zh-CN              外部播放器
 // @namespace               https://github.com/LuckyPuppy514/external-player
 // @copyright               2024, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
-// @version                 1.1.7
+// @version                 1.1.8
 // @license                 MIT
 // @description             Play web video via external player
 // @description:zh-CN       使用外部播放器播放网页中的视频
@@ -33,7 +33,7 @@ const VIDEO_URL_REGEX_EXACT = /^https?:\/\/((?![^"^']*http)[^"^']+(\.|%2e)(mp4|m
 
 const defaultConfig = {
     global: {
-        version: '1.1.7',
+        version: '1.1.8',
         language: (navigator.language || navigator.userLanguage) === 'zh-CN' ? 'zh' : 'en',
         buttonXCoord: '0',
         buttonYCoord: '0',
@@ -266,6 +266,11 @@ class BaseParser {
                 return response && response.indexOf('png') === -1;
             } catch (error) {}
         }
+
+        if (video.match("https?:\/\/[a-zA-Z0-9-/]+")) {
+            return true;
+        }
+
         return new RegExp(VIDEO_URL_REGEX_EXACT).test(video);
     }
     async pause() {
@@ -803,6 +808,9 @@ const PARSER = {
                 method: 'GET',
                 credentials: 'include'
             })).json();
+            if (response.error && response.error.code === 1015) {
+                throw new Error("請先跳過廣告后再嘗試");
+            }
             currentMedia.video = response ? response.src : undefined;
         }
     },
