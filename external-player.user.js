@@ -3,7 +3,7 @@
 // @name:zh-CN              外部播放器
 // @namespace               https://github.com/LuckyPuppy514/external-player
 // @copyright               2024, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
-// @version                 1.1.9
+// @version                 1.2.0
 // @license                 MIT
 // @description             Play web video via external player
 // @description:zh-CN       使用外部播放器播放网页中的视频
@@ -35,7 +35,7 @@ const VIDEO_URL_REGEX_EXACT = /^https?:\/\/((?![^"^']*http)[^"^']+(\.|%2e)(mp4|m
 
 const defaultConfig = {
     global: {
-        version: '1.1.9',
+        version: '1.2.0',
         language: (navigator.language || navigator.userLanguage) === 'zh-CN' ? 'zh' : 'en',
         buttonXCoord: '0',
         buttonYCoord: '0',
@@ -59,6 +59,7 @@ const defaultConfig = {
                     "https://player.cycanime.com/\\?url=.+",
                     "https://www.tucao.my/play/.+",
                     "https://ddys.pro/.+",
+                    "https://43.240.156.118:8443/vip/\\?url=.+",
                 ]
             },
             url: {
@@ -73,7 +74,8 @@ const defaultConfig = {
             },
             script: {
                 regex: [
-                    "https://.*libvio\\..+/vid/yd.php\\?url=.+"
+                    "https://.*libvio\\..+/vid/yd.php\\?url=.+",
+                    "https://43.240.156.118:8443/m3u8/\\?url=.+"
                 ]
             },
             request: {
@@ -274,10 +276,6 @@ class BaseParser {
             } catch (error) {}
         }
 
-        if (video.match("https?:\/\/[a-zA-Z0-9-/]+")) {
-            return true;
-        }
-
         return new RegExp(VIDEO_URL_REGEX_EXACT).test(video);
     }
     async pause() {
@@ -396,6 +394,9 @@ const PARSER = {
                     return;
                 }
             }
+        }
+        async check(video) {
+            return video.startsWith("http") ? true : false;
         }
     },
     URL: class Parser extends BaseParser {
@@ -878,6 +879,9 @@ const PARSER = {
                 name: PROJECT_NAME,
                 method: 'pause'
             }, '*');
+        }
+        async check() {
+            return true;
         }
     }
 };
