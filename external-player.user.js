@@ -3,7 +3,7 @@
 // @name:zh-CN              外部播放器
 // @namespace               https://github.com/LuckyPuppy514/external-player
 // @copyright               2024, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
-// @version                 1.2.1
+// @version                 1.2.2
 // @license                 MIT
 // @description             Play web video via external player
 // @description:zh-CN       使用外部播放器播放网页中的视频
@@ -17,7 +17,7 @@
 // @grant                   GM_setValue
 // @grant                   GM_getValue
 // @grant                   GM.xmlHttpRequest
-// @run-at                  document-end
+// @run-at                  document-start
 // @require                 https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-y/pako/2.0.4/pako.min.js
 // ==/UserScript==
 
@@ -35,7 +35,7 @@ const VIDEO_URL_REGEX_EXACT = /^https?:\/\/((?![^"^']*http)[^"^']+(\.|%2e)(mp4|m
 
 const defaultConfig = {
     global: {
-        version: '1.2.1',
+        version: '1.2.2',
         language: (navigator.language || navigator.userLanguage) === 'zh-CN' ? 'zh' : 'en',
         buttonXCoord: '0',
         buttonYCoord: '0',
@@ -399,7 +399,8 @@ const PARSER = {
             }
         }
         async check(video) {
-            return video.startsWith("http") ? true : false;
+            video = video ? video : currentMedia.video;
+            return video && video.startsWith("http") ? true : false;
         }
     },
     URL: class Parser extends BaseParser {
@@ -884,7 +885,7 @@ const PARSER = {
             }, '*');
         }
         async check() {
-            return true;
+            return currentMedia.video ? true : false;
         }
     }
 };
@@ -1279,7 +1280,6 @@ function appendPlayButton() {
     if (!currentConfig.players) {
         return;
     }
-    var playButtonNeedAutoClick;
     currentConfig.players.forEach(player => {
         if (player.enable !== true) {
             return;
@@ -2459,6 +2459,7 @@ function initTop() {
     }
 
     // 监听子页面事件
+    console.log("父页面添加监听")
     window.addEventListener('message', function (event) {
         const data = event.data;
         if (!data) {
@@ -2473,6 +2474,9 @@ function initTop() {
             currentParser = new PARSER.IFRAME();
             isReloading = data.isReloading;
             showButtonDiv();
+
+            console.log("子页面 INIT");
+
             return;
         }
         if (data.method === 'currentMedia') {
@@ -2561,17 +2565,15 @@ async function init(url) {
     currentUrl = url;
 }
 
-onload = () => {
-    setInterval(() => {
-        const url = location.href;
-        if (currentUrl !== url || (self === top && !buttonDiv)) {
-            console.log(`current url update: ${currentUrl ? currentUrl + ' => ' : ''}${url}`);
-            if (currentUrl && currentUrl.indexOf('?') > -1 &&
-                url.replace(/\/\?/, '?').startsWith(currentUrl.replace(/\/\?/, '?'))) {
-                currentUrl = url;
-                return;
-            }
-            init(url);
+setInterval(() => {
+    const url = location.href;
+    if (currentUrl !== url || (self === top && !buttonDiv)) {
+        console.log(`current url update: ${currentUrl ? currentUrl + ' => ' : ''}${url}`);
+        if (currentUrl && currentUrl.indexOf('?') > -1 &&
+            url.replace(/\/\?/, '?').startsWith(currentUrl.replace(/\/\?/, '?'))) {
+            currentUrl = url;
+            return;
         }
-    }, REFRESH_INTERVAL);
-};
+        init(url);
+    }
+}, REFRESH_INTERVAL);
