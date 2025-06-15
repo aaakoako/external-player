@@ -2459,7 +2459,6 @@ function initTop() {
     }
 
     // 监听子页面事件
-    console.log("父页面添加监听")
     window.addEventListener('message', function (event) {
         const data = event.data;
         if (!data) {
@@ -2474,9 +2473,6 @@ function initTop() {
             currentParser = new PARSER.IFRAME();
             isReloading = data.isReloading;
             showButtonDiv();
-
-            console.log("子页面 INIT");
-
             return;
         }
         if (data.method === 'currentMedia') {
