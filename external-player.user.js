@@ -3,7 +3,7 @@
 // @name:zh-CN              外部播放器
 // @namespace               https://github.com/LuckyPuppy514/external-player
 // @copyright               2024, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
-// @version                 1.2.2
+// @version                 1.2.3
 // @license                 MIT
 // @description             Play web video via external player
 // @description:zh-CN       使用外部播放器播放网页中的视频
@@ -35,7 +35,7 @@ const VIDEO_URL_REGEX_EXACT = /^https?:\/\/((?![^"^']*http)[^"^']+(\.|%2e)(mp4|m
 
 const defaultConfig = {
     global: {
-        version: '1.2.2',
+        version: '1.2.3',
         language: (navigator.language || navigator.userLanguage) === 'zh-CN' ? 'zh' : 'en',
         buttonXCoord: '0',
         buttonYCoord: '0',
@@ -250,9 +250,6 @@ class BaseParser {
     }
     async parseTime() {
         try {
-            if (!currentPlayer.presetEvent.syncTime) {
-                return;
-            }
             for (const video of document.getElementsByTagName('video')) {
                 currentMedia.time = video.currentTime;
                 return;
@@ -349,6 +346,10 @@ class BaseParser {
                 return;
             }
             media = currentMedia;
+
+            if (!player.presetEvent.syncTime) {
+                media.time = undefined;
+            }
 
             if (player.playEvent) {
                 eval(policy.createScript(player.playEvent));
@@ -2401,10 +2402,14 @@ function saveConfig(config) {
     showToast(translation.saveSuccessfully);
 
     // 移除旧元素
-    document.head.removeChild(style);
-    document.body.removeChild(buttonDiv);
-    style = undefined;
-    buttonDiv = undefined;
+    if (style) {
+        document.head.removeChild(style);
+        style = undefined;
+    }
+    if(buttonDiv) {
+        document.body.removeChild(buttonDiv);
+        buttonDiv = undefined;
+    }
 
     // 重新初始化
     isReloading = true;
@@ -2448,13 +2453,16 @@ function showButtonDiv() {
 
 // ======================================== 开始执行 =======================================
 
-function initTop() {
+function appendAll() {
     appendCss();
     appendToastDiv();
     appendLoadingDiv();
     appendButtonDiv();
+}
 
+function initTop() {
     if (currentParser) {
+        appendAll();
         showButtonDiv();
     }
 
@@ -2472,6 +2480,7 @@ function initTop() {
             // 子页面覆盖父页面解析器
             currentParser = new PARSER.IFRAME();
             isReloading = data.isReloading;
+            appendAll();
             showButtonDiv();
             return;
         }
@@ -2563,7 +2572,7 @@ async function init(url) {
 
 setInterval(() => {
     const url = location.href;
-    if (currentUrl !== url || (self === top && !buttonDiv)) {
+    if (currentUrl !== url) {
         console.log(`current url update: ${currentUrl ? currentUrl + ' => ' : ''}${url}`);
         if (currentUrl && currentUrl.indexOf('?') > -1 &&
             url.replace(/\/\?/, '?').startsWith(currentUrl.replace(/\/\?/, '?'))) {
