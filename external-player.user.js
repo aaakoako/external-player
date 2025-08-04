@@ -3,7 +3,7 @@
 // @name:zh-CN              外部播放器
 // @namespace               https://github.com/LuckyPuppy514/external-player
 // @copyright               2024, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
-// @version                 1.2.3
+// @version                 1.2.4
 // @license                 MIT
 // @description             Play web video via external player
 // @description:zh-CN       使用外部播放器播放网页中的视频
@@ -35,7 +35,7 @@ const VIDEO_URL_REGEX_EXACT = /^https?:\/\/((?![^"^']*http)[^"^']+(\.|%2e)(mp4|m
 
 const defaultConfig = {
     global: {
-        version: '1.2.3',
+        version: '1.2.4',
         language: (navigator.language || navigator.userLanguage) === 'zh-CN' ? 'zh' : 'en',
         buttonXCoord: '0',
         buttonYCoord: '0',
@@ -127,6 +127,20 @@ const defaultConfig = {
             },
             enable: true,
             readonly: true,
+            play(media, player) {
+                const delimiter = '&';
+
+                let args = [
+                    `url=${encodeURIComponent(media.video)}`,
+                    media.origin ? `mpv_http-header-fields=${encodeURIComponent('origin: ' + media.origin)}` : '',
+                    media.referer ? `mpv_http-header-fields=${encodeURIComponent('referer: ' + media.referer)}` : '',
+                ]
+                args = args.filter(item => item !== '');
+
+                console.log(args);
+
+                window.open(`iina://weblink?${args.join(delimiter)}`, '_self');
+            }
         },
         {
             name: 'PotPlayer',
@@ -142,6 +156,22 @@ const defaultConfig = {
             },
             enable: true,
             readonly: true,
+            play(media, player) {
+                let args = [
+                    `"${media.video}"`,
+                    media.subtitle ? `/sub="${media.subtitle}"` : '',
+                    media.origin ? `/headers="origin: ${media.origin}"` : '',
+                    media.referer ? `/referer="${media.referer}"` : '',
+                    config.networkProxy ? `/user_agent="${config.networkProxy}"` : '',
+                    media.title ? `/title="${media.title}"` : '',
+                    media.time ? `/seek="${media.time}"` : '',
+                ]
+                args = args.filter(item => item !== '');
+
+                console.log(args);
+
+                window.open(`ush://${player.name}?${compress(args.join(' '))}`, '_self');
+            }
         },
         {
             name: 'MPV',
@@ -157,6 +187,27 @@ const defaultConfig = {
             },
             enable: true,
             readonly: true,
+            play(media, player) {
+                let args = [
+                    `"${media.video}"`,
+                    media.audio ? `--audio-file="${media.audio}"` : '',
+                    media.subtitle ? `--sub-file="${media.subtitle}"` : '',
+                    media.origin ? `--http-header-fields="origin: ${media.origin}"` : '',
+                    media.referer ? `--http-header-fields="referer: ${media.referer}"` : '',
+                    media.cookie ? `--http-header-fields="cookie: ${media.cookie}"` : '',
+                    config.networkProxy ? `--http-proxy="${config.networkProxy}"` : '',
+                    media.ytdlp.networkProxy ? `--ytdl-raw-options="proxy=[${media.ytdlp.networkProxy}]"` : '',
+                    media.ytdlp.quality ? `--ytdl-format="bestvideo[height<=?${media.ytdlp.quality}]+bestaudio/best"` : '',
+                    media.bilibili.cid ? `--script-opts-append="cid=${media.bilibili.cid}"` : '',
+                    media.title ? `--force-media-title="${media.title}"` : '',
+                    media.time ? `--start="${media.time}"` : '',
+                ]
+                args = args.filter(item => item !== '');
+
+                console.log(args);
+
+                window.open(`ush://${player.name}?${compress(args.join(' '))}`, '_self');
+            }
         },
         {
             name: 'MPVNET',
@@ -172,6 +223,27 @@ const defaultConfig = {
             },
             enable: true,
             readonly: true,
+            play(media, player) {
+                let args = [
+                    `"${media.video}"`,
+                    media.audio ? `--audio-file="${media.audio}"` : '',
+                    media.subtitle ? `--sub-file="${media.subtitle}"` : '',
+                    media.origin ? `--http-header-fields="origin: ${media.origin}"` : '',
+                    media.referer ? `--http-header-fields="referer: ${media.referer}"` : '',
+                    media.cookie ? `--http-header-fields="cookie: ${media.cookie}"` : '',
+                    config.networkProxy ? `--http-proxy="${config.networkProxy}"` : '',
+                    media.ytdlp.networkProxy ? `--ytdl-raw-options="proxy=[${media.ytdlp.networkProxy}]"` : '',
+                    media.ytdlp.quality ? `--ytdl-format="bestvideo[height<=?${media.ytdlp.quality}]+bestaudio/best"` : '',
+                    media.bilibili.cid ? `--script-opts="cid=${media.bilibili.cid}"` : '',
+                    media.title ? `--force-media-title="${media.title}"` : '',
+                    media.time ? `--start="${media.time}"` : '',
+                ]
+                args = args.filter(item => item !== '');
+
+                console.log(args);
+
+                window.open(`ush://${player.name}?${compress(args.join(' '))}`, '_self');
+            }
         }
     ]
 }
@@ -352,7 +424,26 @@ class BaseParser {
             }
 
             if (player.playEvent) {
-                eval(policy.createScript(player.playEvent));
+                try {
+                    eval(policy.createScript(player.playEvent));
+                } catch (error) {
+                    if (error.toString().includes('unsafe-eval')) {
+                        console.log('unsafe-eval: try to use default player.play()');
+                        let flag = undefined;
+                        for (const p of defaultConfig.players) {
+                            if (player.name === p.name) {
+                                p.play(media, player);
+                                flag = true;
+                                break;
+                            }
+                        }
+                        if (!flag) {
+                            throw new Error('unsafe-eval and did not find default player: ' + player.name);
+                        }
+                    } else {
+                        throw error;
+                    }
+                }
             }
 
             if (player.presetEvent.closeAuto) {
@@ -2406,7 +2497,7 @@ function saveConfig(config) {
         document.head.removeChild(style);
         style = undefined;
     }
-    if(buttonDiv) {
+    if (buttonDiv) {
         document.body.removeChild(buttonDiv);
         buttonDiv = undefined;
     }
