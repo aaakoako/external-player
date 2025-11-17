@@ -28,7 +28,6 @@
 - [萌番动漫馆](https://www.moepoi.net)
 - [巴哈姆特](https://ani.gamer.com.tw)
 - [CN影院](https://cnys.tv)
-- [低端影视](https://ddys.pro)
 - [Anime1.me](https://anime1.me)
 - [AGE动漫](https://rentry.org/agefans)
 
