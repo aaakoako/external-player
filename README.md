@@ -29,7 +29,6 @@
 - [巴哈姆特](https://ani.gamer.com.tw)
 - [MISSAV](https://missav.com)
 - [CN影院](https://cnys.tv)
-- [低端影视](https://ddys.pro)
 - [Anime1.me](https://anime1.me)
 - [AGE动漫](https://rentry.org/agefans)
 
